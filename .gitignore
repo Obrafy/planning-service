@@ -1,0 +1,8 @@
+.env
+.vscode
+/dist
+/logs
+/logs/*
+/bin
+/bin/*
+/docker/Dockerfile-*

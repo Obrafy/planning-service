@@ -1,0 +1,7 @@
+package constants
+
+const (
+	METRIC_INIT            = "INIT"
+	METRIC_GENERIC_HANDLER = "GENERIC_HANDLER"
+	METRIC_TRIAL_HANDLER   = "TRIAL_HANDLER"
+)

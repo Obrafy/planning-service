@@ -1,0 +1,7 @@
+main-sqs-client:
+    queue-name: 'planning-beta'
+trial-service:
+    database: 'trial-service-beta'
+    collection: 'trial-service'
+log:
+    log-group: 'planning-beta'

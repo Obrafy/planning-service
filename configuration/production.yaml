@@ -1,0 +1,7 @@
+main-sqs-client:
+    queue-name: 'planning-prod'
+trial-service:
+    database: 'trial-service-prod'
+    collection: 'trial-service'
+log:
+    log-group: 'planning-prod'

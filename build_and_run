@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# Integration tests will fill this var with the text "_only"
+# which will make integration test faster by skipping go test during development
+OPTS=${OPTS:-""}
+
+if [ "$(uname)" == "Darwin" ]; then
+  APP_PATH="bin/darwin-amd64"
+  ./build.bash mac
+else
+  APP_PATH="bin/linux-amd64"
+  ./build.bash linux
+fi
+
+if [ $? -ne 0 ]; then
+    echo "ERROR BUILDIN GO"
+    exit 1
+fi
+
+./$APP_PATH/app $@

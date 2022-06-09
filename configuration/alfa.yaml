@@ -1,0 +1,7 @@
+main-sqs-client:
+    queue-name: 'planning-alfa'
+trial-service:
+    database: 'trial-service-alfa'
+    collection: 'trial-service'
+log:
+    log-group: 'planning-alfa'

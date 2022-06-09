@@ -1,0 +1,40 @@
+main-sqs-client:
+    queue-name: 'planning-dev'
+    aws-region: 'sa-east-1'
+    aws-profile-name: 'obrafy'
+    # delay-seconds:                # delay to messages be available
+    # maximum-message-size:         # in bytes [1024,262144] - default 262144
+    # message-retention-period:     # in seconds [60,1209600] - default 345600
+    receive-message-wait-time-seconds: 5 # default 0
+    # dlq-arn:                      # arn of DLQ queue
+    # max-receive-count-dlq:        # number of receives before send to dlq
+    visibility-timeout: 60 # in seconds [0,43200] - default 30
+main-s3-client:
+    aws-bucket-name: 'obrafy-dev'
+    aws-region: 'sa-east-1'
+    aws-profile-name: 'obrafy'
+    downloader-options:
+        concurrency: 5
+        dowloader-part-size-in-bytes: 5242880 # 1024 * 1024 * 5
+    uploader-options:
+        concurrency: 5
+        dowloader-part-size-in-bytes: 5242880 # 1024 * 1024 * 5
+
+trial-service:
+    database-uri: 'mongodb+srv://obrafy-dev:XLhEmc4mmvoon9T9@obrafy.e9qlq.mongodb.net'
+    database: 'trial-service-dev'
+    collection: 'trial-service'
+obrafy-api:
+    base-uri: 'http://localhost:3001'
+    timeout-in-seconds: 10
+log:
+    aws-cloud-watch-active: true
+    # Debug, Info, Warning, Error, Fatal and Panic
+    log-level: 'Trace'
+    log-group: 'planning-dev'
+    aws-region: 'us-east-2'
+    aws-profile-name: 'obrafy'
+    aws-config-profile: 'default'
+    aws-stream-prefix: 'log-'
+    file-active: true
+    log-path: './logs'
