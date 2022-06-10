@@ -1,4 +1,4 @@
-package trialservice
+package planningservice
 
 import (
 	"context"
@@ -10,12 +10,12 @@ import (
 	"github.com/obrafy/planning/infrastructure/sqsbase"
 )
 
-func (trialService *TrialService) Handler(msg *sqsbase.SQSMessage) error {
+func (planningService *PlanningService) Handler(msg *sqsbase.SQSMessage) error {
 	// log := logrus.WithFields(logrus.Fields{"incoming-message": msg})
 
 	// Batch Download
-	files, err := trialService.S3ManagerClient.Downloader.S3.ListObjects(&s3.ListObjectsInput{
-		Bucket: trialService.S3ManagerClient.Bucket,
+	files, err := planningService.S3ManagerClient.Downloader.S3.ListObjects(&s3.ListObjectsInput{
+		Bucket: planningService.S3ManagerClient.Bucket,
 		Prefix: aws.String("planning-files"),
 	})
 
@@ -33,7 +33,7 @@ func (trialService *TrialService) Handler(msg *sqsbase.SQSMessage) error {
 			batchDownloadObject,
 			s3manager.BatchDownloadObject{
 				Object: &s3.GetObjectInput{
-					Bucket: trialService.S3ManagerClient.Bucket,
+					Bucket: planningService.S3ManagerClient.Bucket,
 					Key:    aws.String(*file.Key),
 				},
 				Writer: fileBuffer,
@@ -45,7 +45,7 @@ func (trialService *TrialService) Handler(msg *sqsbase.SQSMessage) error {
 
 	batchDownloadIterator := &s3manager.DownloadObjectsIterator{Objects: batchDownloadObject}
 
-	if err := trialService.S3ManagerClient.Downloader.DownloadWithIterator(
+	if err := planningService.S3ManagerClient.Downloader.DownloadWithIterator(
 		context.Background(),
 		batchDownloadIterator,
 	); err != nil {

@@ -14,7 +14,7 @@ import (
 	"github.com/obrafy/planning/infrastructure/logger"
 	"github.com/obrafy/planning/infrastructure/s3"
 	"github.com/obrafy/planning/infrastructure/sqs"
-	trialservice "github.com/obrafy/planning/services/trial-service"
+	planningservice "github.com/obrafy/planning/services/planning-service"
 	"github.com/sirupsen/logrus"
 )
 
@@ -24,10 +24,10 @@ const (
 )
 
 type App struct {
-	Configuration *config.Configuration
-	MainSQS       *sqs.MainSQSClient
-	MainS3        *s3.S3ManagerClient
-	TrialService  *trialservice.TrialService
+	Configuration   *config.Configuration
+	MainSQS         *sqs.MainSQSClient
+	MainS3          *s3.S3ManagerClient
+	PlanningService *planningservice.PlanningService
 }
 
 func NewApp(environment string) (*App, error) {
@@ -65,8 +65,8 @@ func NewApp(environment string) (*App, error) {
 	app.MainS3 = s3.NewS3ManagerClient(&app.Configuration.MainS3Client)
 
 	// Services
-	app.TrialService, err = trialservice.NewTrialService(
-		&app.Configuration.TrialService,
+	app.PlanningService, err = planningservice.NewPlanningService(
+		&app.Configuration.PlanningService,
 		app.MainS3,
 	)
 
@@ -98,7 +98,7 @@ func (app *App) Run() {
 		}
 
 		services := make(map[string]interface{})
-		services["/trial"] = app.TrialService
+		services["/planning"] = app.PlanningService
 
 		fmt.Println("Running SQS", *app.MainSQS.QueueURL)
 		app.MainSQS.Run(services)

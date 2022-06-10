@@ -1,11 +1,11 @@
 package config
 
 type Configuration struct {
-	MainSQSQueue SQSClient   `yaml:"main-sqs-client"`
-	MainS3Client S3Client    `yaml:"main-s3-client"`
-	TrialService BaseService `yaml:"trial-service"`
-	ObrafyAPI    APIClient   `yaml:"obrafy-api"`
-	Log          Log         `yaml:"log"`
+	MainSQSQueue    SQSClient   `yaml:"main-sqs-client"`
+	MainS3Client    S3Client    `yaml:"main-s3-client"`
+	PlanningService BaseService `yaml:"planning-service"`
+	ObrafyAPI       APIClient   `yaml:"obrafy-api"`
+	Log             Log         `yaml:"log"`
 }
 
 type SQSClient struct {

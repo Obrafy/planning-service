@@ -20,10 +20,10 @@ main-s3-client:
         concurrency: 5
         dowloader-part-size-in-bytes: 5242880 # 1024 * 1024 * 5
 
-trial-service:
+planning-service:
     database-uri: 'mongodb+srv://obrafy-dev:XLhEmc4mmvoon9T9@obrafy.e9qlq.mongodb.net'
-    database: 'trial-service-dev'
-    collection: 'trial-service'
+    database: 'planning-service-dev'
+    collection: 'planning-service'
 obrafy-api:
     base-uri: 'http://localhost:3001'
     timeout-in-seconds: 10
