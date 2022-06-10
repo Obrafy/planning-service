@@ -1,10 +1,12 @@
 package trialservice
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/s3"
+	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 	"github.com/obrafy/planning/infrastructure/sqsbase"
 )
 
@@ -21,18 +23,37 @@ func (trialService *TrialService) Handler(msg *sqsbase.SQSMessage) error {
 		return fmt.Errorf("error listing files from s3 folder: %w", err)
 	}
 
-	for _, file := range files.Contents {
-		// Single Object Download
+	batchDownloadObject := []s3manager.BatchDownloadObject{}
+	buffers := []*aws.WriteAtBuffer{}
 
+	for _, file := range files.Contents {
 		fileBuffer := new(aws.WriteAtBuffer)
 
-		trialService.S3ManagerClient.Downloader.Download(fileBuffer, &s3.GetObjectInput{
-			Bucket: trialService.S3ManagerClient.Bucket,
-			Key:    aws.String(*file.Key),
-		})
+		batchDownloadObject = append(
+			batchDownloadObject,
+			s3manager.BatchDownloadObject{
+				Object: &s3.GetObjectInput{
+					Bucket: trialService.S3ManagerClient.Bucket,
+					Key:    aws.String(*file.Key),
+				},
+				Writer: fileBuffer,
+			},
+		)
 
-		fmt.Println(string(fileBuffer.Bytes()))
+		buffers = append(buffers, fileBuffer)
+	}
 
+	batchDownloadIterator := &s3manager.DownloadObjectsIterator{Objects: batchDownloadObject}
+
+	if err := trialService.S3ManagerClient.Downloader.DownloadWithIterator(
+		context.Background(),
+		batchDownloadIterator,
+	); err != nil {
+		return fmt.Errorf("error downloading files from s3 folder: %w", err)
+	}
+
+	for _, buffer := range buffers {
+		fmt.Println(string(buffer.Bytes()))
 	}
 
 	// fmt.Println(files)
